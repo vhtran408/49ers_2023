@@ -10,3 +10,20 @@ library(sqldf)
 ```{r import csv}
 df_nfl_2023 <- read_csv("Data/play_by_play_2023.csv")
 ```
+
+#subset data
+```{r select only 49ers}
+df_49ers <- df_nfl_2023 %>%
+  subset(home_team == 'SF' | away_team == 'SF')
+```
+
+#initial plots
+```{r week delineation}
+#plotting just by each individual YAC per completed pass attempt with no grouping per week
+YAC_by_week_plot <- df_49ers %>% 
+  group_by(week) %>%
+  plot_ly(x = ~week,
+          y = ~yards_after_catch,
+          marker = list(size = 14,
+                        opacity = 0.9))
+```
