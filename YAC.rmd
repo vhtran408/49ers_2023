@@ -1,0 +1,12 @@
+# grab data
+```{r load libraries}
+library(tidyverse)
+library(plotly)
+library(lubridate)
+library(sqldf)
+```
+
+#import data
+```{r import csv}
+df_nfl_2023 <- read_csv("Data/play_by_play_2023.csv")
+```
