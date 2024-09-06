@@ -20,10 +20,25 @@ df_49ers <- df_nfl_2023 %>%
 #initial plots
 ```{r week delineation}
 #plotting just by each individual YAC per completed pass attempt with no grouping per week
+#realizing that the base plot did not parse if SF was on offense or not so rethinking the displayed data
 YAC_by_week_plot <- df_49ers %>% 
+  subset(season_type == 'REG') %>% #only looking at regular season in this plot
+  subset(posteam == 'SF') %>% #only looking when SF was on the offensive side of the ball
   group_by(week) %>%
   plot_ly(x = ~week,
           y = ~yards_after_catch,
+          color = ~posteam_type, #colored by team with possession, here filtered as SF, being home or away game
+          #legendgroup = ~paste(month_year, gro_status), 
+          text = ~paste("Drive :", drive,
+                        "Quarter :", qtr,
+                        "Receiver :", receiver_player_name),
+          hoverinfo = "text",
+          type = "scattergl",
+          mode = "markers",
+          symbol = ~receiver_player_name, #different shape points for different receivers to see if there's a trend
+          #symbols = (c(16, 8)),
+          #showlegend = FALSE,
           marker = list(size = 14,
-                        opacity = 0.9))
+                        opacity = 0.9),
+          colors = c("blue", "red"))
 ```
