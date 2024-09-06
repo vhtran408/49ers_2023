@@ -42,3 +42,36 @@ YAC_by_week_plot <- df_49ers %>%
                         opacity = 0.9),
           colors = c("blue", "red"))
 ```
+
+```{r YAC by player}
+YAC_by_player_plot <- df_49ers %>% 
+  subset(!is.na(receiver_player_name)) %>%    # Remove rows where there was no pass (completion)
+  subset(season_type == 'REG') %>% #only looking at regular season in this plot
+  subset(posteam == 'SF') %>% #only looking at when SF had the ball on offense
+  subset(posteam_type == 'home') %>% #only looking at home games
+  #group_by(week) %>% #looking at productivity per week - more targeted or effective in certain weeks? 
+  plot_ly(x = ~as.factor(receiver_player_name), 
+          y = ~yards_after_catch, 
+          type = 'scatter', 
+          mode = 'markers',
+          color = ~as.factor(qtr),   # colored by qtr
+          symbol = ~week,    # Different symbols for each week
+          #size = ~drive,        # Size of points based on the drive number
+          marker = list(size = 14, opacity = 0.9), 
+          hoverinfo = "text", 
+          text = ~paste("Receiver:", receiver_player_name, "<br>Yards After Catch:", yards_after_catch,
+                        "<br>Week:", week, "<br>Quarter:", qtr, "<br>Drive:", drive)) %>%
+  layout(title = "Yards After Catch by Receiver with Week, Quarter, & Drive",
+         xaxis = list(title = "Receiver"),
+         yaxis = list(title = "Yards After Catch")) %>%
+  layout(legend = list(title = list(text='<b> Quarter </b>'),
+                       orientation = "h",   # show entries horizontally
+                       xanchor = "center",  # use center of legend as anchor
+                       yanchor = "bottom",  # use bottom as anchor                       
+                       x = 0.5,             # put legend in center of x-axis
+                       y = -0.2,                # and at bottom of y-axis
+                       font = list (size = 15), #change the size of the font of the legend
+                       marker = list(size = 5),
+                       itemsizing = "constant", 
+                       bgcolor = "rgba(0, 0, 0, 0)")) #makes the background of legend transparent
+```
