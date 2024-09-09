@@ -75,3 +75,59 @@ YAC_by_player_plot <- df_49ers %>%
                        itemsizing = "constant", 
                        bgcolor = "rgba(0, 0, 0, 0)")) #makes the background of legend transparent
 ```
+
+```{r YAC by passer}
+df_nfl_2023_reg <- df_nfl_2023 %>% 
+  subset(!is.na(receiver_player_name)) %>%    # Remove rows where there was no pass (completion)
+  subset(season_type == 'REG')  #only looking at regular season in this plot
+
+YAC_by_passer_plot <- df_nfl_2023_reg %>%
+  plot_ly(type = 'violin') 
+YAC_by_passer_plot <- YAC_by_passer_plot %>%
+  add_trace(
+    x = ~as.factor(passer_player_name)[df_nfl_2023_reg$posteam_type == 'home'],
+    y = ~yards_after_catch[df_nfl_2023_reg$posteam_type == 'home'],
+    legendgroup = 'home',
+    scalegroup = 'home',
+    name = 'Home',
+    side = 'negative',
+    box = list(
+      visible = T
+    ),
+    meanline = list(
+      visible = T
+    ),
+    color = I("cornflowerblue")
+  ) 
+YAC_by_passer_plot <- YAC_by_passer_plot %>%
+  add_trace(
+    x = ~as.factor(passer_player_name)[df_nfl_2023_reg$posteam_type == 'away'],
+    y = ~yards_after_catch[df_nfl_2023_reg$posteam_type == 'away'],
+    legendgroup = 'away',
+    scalegroup = 'away',
+    name = 'Away',
+    side = 'positive',
+    box = list(
+      visible = T
+    ),
+    meanline = list(
+      visible = T
+    ),
+    color = I("springgreen")
+  ) 
+
+YAC_by_passer_plot <- YAC_by_passer_plot %>%
+  layout(
+    title = "Yards After Catch Range by Passer",
+    xaxis = list(
+      title = "Passer Name"  
+    ),
+    yaxis = list(
+      title = "Yards After Catch",
+      zeroline = F
+    ),
+    violingap = 0,
+    violingroupgap = 0,
+    violinmode = 'overlay'
+  )
+  ```
